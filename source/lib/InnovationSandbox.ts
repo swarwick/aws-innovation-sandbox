@@ -1,9 +1,11 @@
-import cfn = require("@aws-cdk/aws-cloudformation");
-import lambda = require("@aws-cdk/aws-lambda");
-import cdk = require("@aws-cdk/core");
-import iam = require("@aws-cdk/aws-iam");
-import s3 = require("@aws-cdk/aws-s3");
-import { CfnParameter, CfnResource } from '@aws-cdk/core';
+
+import { aws_cloudformation as cfn } from 'aws-cdk-lib';
+import { aws_lambda as lambda } from 'aws-cdk-lib';
+import { aws_iam as iam } from 'aws-cdk-lib';
+import { aws_s3 as s3 } from 'aws-cdk-lib';
+import * as cdk from 'aws-cdk-lib';
+import { Provider } from 'aws-cdk-lib/custom-resources';
+import { Construct } from 'constructs';
 
 
 export class InnovationSandbox extends cdk.Stack {
@@ -74,9 +76,6 @@ export class InnovationSandbox extends cdk.Stack {
     );
 
     // Create Accounts, OUs
-
-   
-   
 
     const l0_role_policy = new iam.Policy(this, "Create_Account_OU_Role_Policy", {
       statements:[ 
@@ -158,11 +157,11 @@ export class InnovationSandbox extends cdk.Stack {
 
     l0.node.addDependency(l0_role_policy);
 
-    const create_account_ou = new cfn.CustomResource(
-      this,
-      "Innovation_Create_Account_OU",
+    const create_account_ou = new cdk.CustomResource(
+      this, 
+      'Innovation_Create_Account_OU', 
       {
-        provider: cfn.CustomResourceProvider.lambda(l0),
+        serviceToken: l0.functionArn,
         properties: {
           Mgmt_Name: mgmt_account_name.valueAsString,
           Mgmt_Email: mgmt_email.valueAsString,
@@ -170,12 +169,9 @@ export class InnovationSandbox extends cdk.Stack {
           Sbx_Email: sbx_email.valueAsString,
           Sbx_OU_Name: sbx_ou_name.valueAsString,
           Mgmt_OU_Name: mgmt_ou_name.valueAsString,
-        },
+        }
       }
-    );
-
-   
-  
+    );   
    
     var _Mgmt = create_account_ou.getAtt("Appstream_Account_ID").toString();
     var _Sbx = create_account_ou.getAtt("Sandbox_Account_ID").toString();
@@ -233,11 +229,11 @@ export class InnovationSandbox extends cdk.Stack {
       ]
     });
 
-    const delete_default_vpcs = new cfn.CustomResource(
+    const delete_default_vpcs = new cdk.CustomResource(
       this,
       "Innovation_Delete_Default_VPCs",
       {
-        provider: cfn.CustomResourceProvider.lambda(l1),
+        serviceToken:l1.functionArn,
         properties: {
           Appstream_Account_ID: _Mgmt,
           Sandbox_Account_ID: _Sbx
@@ -298,11 +294,11 @@ export class InnovationSandbox extends cdk.Stack {
 
 
     
-    const run_mgmt_stack = new cfn.CustomResource(
+    const run_mgmt_stack = new cdk.CustomResource(
       this,
       "Innovation_Run_Mgmt_Stack",
       {
-        provider: cfn.CustomResourceProvider.lambda(l2),
+        serviceToken: l2.functionArn,
         properties: {
           Appstream_Account_ID: _Mgmt,
           Sandbox_Account_ID: _Sbx,
@@ -370,11 +366,11 @@ export class InnovationSandbox extends cdk.Stack {
     });
 
 
-    const accept_resource_share = new cfn.CustomResource(
+    const accept_resource_share = new cdk.CustomResource(
       this,
       "Innovation_Accept_Resource_Share",
       {
-        provider: cfn.CustomResourceProvider.lambda(l3),
+        serviceToken: l3.functionArn,
         properties: {
           Sandbox_Account_ID: _Sbx,
         },
@@ -433,11 +429,11 @@ export class InnovationSandbox extends cdk.Stack {
     });
 
 
-    const run_sbx_stack = new cfn.CustomResource(
+    const run_sbx_stack = new cdk.CustomResource(
       this,
       "Innovation_Run_Sbx_Stack",
       {
-        provider: cfn.CustomResourceProvider.lambda(l4),
+        serviceToken: l4.functionArn,
         properties: {
           Appstream_Account_ID: _Mgmt,
           Sandbox_Account_ID: _Sbx,
@@ -503,11 +499,11 @@ export class InnovationSandbox extends cdk.Stack {
     });
 
 
-    const tgw_route_tables = new cfn.CustomResource(
+    const tgw_route_tables = new cdk.CustomResource(
       this,
       "Innovation_TGW_Route_Tables",
       {
-        provider: cfn.CustomResourceProvider.lambda(l5),
+        serviceToken: l5.functionArn,
         properties: {
           Appstream_Account_ID: _Mgmt,
           Tgw_ID: _Tgw_ID,
@@ -604,8 +600,8 @@ export class InnovationSandbox extends cdk.Stack {
     });
 
 
-    const attach_scp = new cfn.CustomResource(this, "Innovation_Attach_SCPs", {
-      provider: cfn.CustomResourceProvider.lambda(l6),
+    const attach_scp = new cdk.CustomResource(this, "Innovation_Attach_SCPs", {
+      serviceToken: l6.functionArn,
       properties: {
         Sandbox_Account_ID: _Sbx,
         Sandbox_OU: _Sbx_OU,

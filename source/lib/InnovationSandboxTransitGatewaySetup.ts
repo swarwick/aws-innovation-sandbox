@@ -1,6 +1,7 @@
 
-import cdk = require('@aws-cdk/core');
-import ec2 = require('@aws-cdk/aws-ec2');
+import * as cdk from 'aws-cdk-lib';
+import { Construct } from 'constructs';
+import { aws_ec2 as ec2 } from 'aws-cdk-lib';
 
 
 export class InnovationSandboxTransitGatewaySetup extends cdk.Stack {

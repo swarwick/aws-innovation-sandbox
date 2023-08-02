@@ -1,9 +1,11 @@
 
-import cdk = require("@aws-cdk/core");
-import ec2 = require("@aws-cdk/aws-ec2");
-import iam = require("@aws-cdk/aws-iam");
-import cloudtrail = require("@aws-cdk/aws-cloudtrail");
-import s3 = require("@aws-cdk/aws-s3");
+import * as cdk from 'aws-cdk-lib';
+import { Construct } from 'constructs';
+import { aws_ec2 as ec2 } from 'aws-cdk-lib';
+import { aws_cloudtrail as cloudtrail } from 'aws-cdk-lib';
+
+import { aws_s3 as s3 } from 'aws-cdk-lib';
+import { aws_iam as iam } from 'aws-cdk-lib';
 
 export class InnovationSandboxSbxAccount extends cdk.Stack {
   public readonly response: string;
@@ -52,12 +54,12 @@ export class InnovationSandboxSbxAccount extends cdk.Stack {
         {
           cidrMask: 24,
           name: "private_innovation_sandbox_1",
-          subnetType: ec2.SubnetType.ISOLATED
+          subnetType: ec2.SubnetType.PRIVATE_ISOLATED
         },
         {
           cidrMask: 24,
           name: "private_innovation_sandbox_2",
-          subnetType: ec2.SubnetType.ISOLATED
+          subnetType: ec2.SubnetType.PRIVATE_ISOLATED
         }
       ],
     });
@@ -78,8 +80,9 @@ export class InnovationSandboxSbxAccount extends cdk.Stack {
       }
     );
 
+    let routenum = 0;
     for (let subnet of vpc_sbx.isolatedSubnets) {
-      new ec2.CfnRoute(this, subnet.node.uniqueId, {
+      new ec2.CfnRoute(this, 'ISSBXVPC_route_' + routenum++, {
         routeTableId: subnet.routeTable.routeTableId,
         destinationCidrBlock: "0.0.0.0/0",
         transitGatewayId: tgw_id.valueAsString,

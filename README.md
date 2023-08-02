@@ -78,7 +78,7 @@ AWS Solutions use two buckets: a bucket for global access to templates, which is
 
 **Build the solution**
 
-From the *deployment* folder in your cloned repo, run build-s3-dist.sh, passing the root name of your bucket (ex. mybucket), name of the solution i.e. aws-innovation-sandbox and the version you are building (ex. v1.3.3). We recommend using a similar version based on the version downloaded from GitHub (ex. GitHub: v1.3.3, your build: v1.3.3.mybuild)
+From the *deployment* folder in your cloned repo, run build-s3-dist.sh, passing the root name of your bucket (ex. mybucket), name of the solution i.e. aws-innovation-sandbox and the version you are building (ex. v1.4.0). We recommend using a similar version based on the version downloaded from GitHub (ex. GitHub: v1.4.0, your build: v1.4.0.mybuild)
 
 ```
 chmod +x build-s3-dist.sh
@@ -93,7 +93,7 @@ Upload the InnovationSandbox.template to your global bucket.
 Upload the files listed below to your regional bucket in the following pattern:
 
 ```
-s3://mybucket-us-east-1/aws-innovation-sandbox/v1.3.3/<file name> (lambda Code)
+s3://mybucket-us-east-1/aws-innovation-sandbox/v1.4.0/<file name> (lambda Code)
 ```
 
 * `InnovationSandboxManagementAccount.ts` 

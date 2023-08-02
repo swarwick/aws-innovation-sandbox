@@ -1,23 +1,24 @@
 
-import cdk = require('@aws-cdk/core');
-import ec2 = require('@aws-cdk/aws-ec2');
-import ram = require('@aws-cdk/aws-ram');
-import cloudtrail = require("@aws-cdk/aws-cloudtrail");
-import s3 = require("@aws-cdk/aws-s3");
-import iam = require("@aws-cdk/aws-iam");
+import * as cdk from 'aws-cdk-lib';
+import { Construct } from 'constructs';
 
+import { aws_ec2 as ec2 } from 'aws-cdk-lib';
+import { aws_ram as ram } from 'aws-cdk-lib';
+import { aws_cloudtrail as cloudtrail } from 'aws-cdk-lib';
 
-export interface imgprops {
-
-  instanceType: "stream.standard.medium"
-
-}
+import { aws_s3 as s3 } from 'aws-cdk-lib';
+import { aws_iam as iam } from 'aws-cdk-lib';
 
 export class InnovationSandboxManagementAccount extends cdk.Stack {
 
   public readonly response: string;
-  constructor(scope: cdk.App, id: string, props?: any, s?: string) {
-    super(scope, id);
+  constructor(
+    scope: cdk.App,
+    id: string,
+    props?: any,
+    s?: string
+  ) {
+    super(scope, id, props);
 
 
     const SbxAccountId = new cdk.CfnParameter(this, "SbxAccountId", {
@@ -48,7 +49,7 @@ export class InnovationSandboxManagementAccount extends cdk.Stack {
         {
           cidrMask: 24,
           name: 'private_innovation_mgmt',
-          subnetType: ec2.SubnetType.PRIVATE,
+          subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS,
         }
       ]
     });
@@ -78,9 +79,9 @@ export class InnovationSandboxManagementAccount extends cdk.Stack {
     });
     TransitGatewayAttachmentEgress.addDependsOn(TransitGateway);
 
-    
+    let routenum = 0;
     for (let subnet of vpc.publicSubnets) {
-      new ec2.CfnRoute(this, subnet.node.uniqueId, {
+      new ec2.CfnRoute(this, 'ISAppStreamMgmtVPC_route_' + routenum++, {
         routeTableId: subnet.routeTable.routeTableId,
         destinationCidrBlock: "192.168.0.0/16",
         transitGatewayId: TransitGateway.ref,

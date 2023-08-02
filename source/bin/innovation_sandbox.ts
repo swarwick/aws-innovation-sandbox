@@ -1,23 +1,23 @@
 #!/usr/bin/env node
 
-import * as cdk from '@aws-cdk/core';
+import 'source-map-support/register';
+import * as cdk from 'aws-cdk-lib';
 
 import { InnovationSandboxManagementAccount } from '../lib/InnovationSandboxManagementAccount';
 import { InnovationSandboxSbxAccount } from '../lib/InnovationSandboxSbxAccount';
 import { InnovationSandboxTransitGatewaySetup } from '../lib/InnovationSandboxTransitGatewaySetup';
 import { InnovationSandbox } from '../lib/InnovationSandbox';
 
-const SOLUTION_VERSION = process.env['DIST_VERSION'] || '%%VERSION%%';
-const SOLUTION_NAME = process.env['SOLUTION_NAME'];
-const SOLUTION_ID = process.env['SOLUTION_ID'];
-const SOLUTION_BUCKET = process.env['DIST_OUTPUT_BUCKET'];
-const SOLUTION_TMN = process.env['SOLUTION_TRADEMARKEDNAME'];
+const SOLUTION_VERSION = process.env['DIST_VERSION'] || 'v1.3.3.mybuild';
+const SOLUTION_NAME = process.env['SOLUTION_NAME'] || 'aws-innovation-sandbox';
+const SOLUTION_ID = process.env['SOLUTION_ID'] || 'SO0104';
+const SOLUTION_BUCKET = process.env['DIST_OUTPUT_BUCKET'] || 'aws-innovation-sandbox';
+const SOLUTION_TMN = process.env['SOLUTION_TRADEMARKEDNAME'] || 'aws-innovation-sandbox';
 const SOLUTION_PROVIDER = 'AWS Solution Development';
 
 const app = new cdk.App();
 
-
-new InnovationSandboxManagementAccount(app, 'InnovationSandboxManagementAccount');
+new InnovationSandboxManagementAccount(app, 'InnovationSandboxManagementAccount', {});
 new InnovationSandboxSbxAccount(app, 'InnovationSandboxSbxAccount');
 new InnovationSandboxTransitGatewaySetup(app, 'InnovationSandboxTransitGatewaySetup');
 new InnovationSandbox(app, 'InnovationSandbox', {

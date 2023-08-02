@@ -1,5 +1,10 @@
-import { SynthUtils, expect as expectCDK, matchTemplate, MatchStyle } from '@aws-cdk/assert';
-import * as cdk from '@aws-cdk/core';
+
+import { Capture, Match, Template } from "aws-cdk-lib/assertions";
+
+
+import * as cdk from 'aws-cdk-lib';
+
+
 import * as invsbxmain from '../lib/InnovationSandbox';
 import * as invsbxmgmt from '../lib/InnovationSandboxManagementAccount';
 import * as invsbxsbx from '../lib/InnovationSandboxSbxAccount';
@@ -21,7 +26,8 @@ test('InnovationSandboxMain', () => {
     }
     );
     // THEN
-    expect(SynthUtils.toCloudFormation(stack)).toMatchSnapshot();
+    const template = Template.fromStack(stack);
+    expect(template.toJSON()).toMatchSnapshot();
 });
 
 
@@ -31,7 +37,8 @@ test('InnovationSandboxMgmt', () => {
   new invsbxmgmt.InnovationSandboxManagementAccount(app, 'InnovationSandboxManagementTestStack'
   );
   // THEN
-  expect(SynthUtils.toCloudFormation(stack)).toMatchSnapshot();
+  const template = Template.fromStack(stack);
+  expect(template.toJSON()).toMatchSnapshot();
 });
 
 test('InnovationSandboxSbx', () => {
@@ -40,7 +47,8 @@ test('InnovationSandboxSbx', () => {
   new invsbxsbx.InnovationSandboxSbxAccount(app, 'InnovationSandboxSbxTestStack'
   );
   // THEN
-  expect(SynthUtils.toCloudFormation(stack)).toMatchSnapshot();
+  const template = Template.fromStack(stack);
+  expect(template.toJSON()).toMatchSnapshot();
 });
 
 test('InnovationSandboxTgw', () => {
@@ -49,5 +57,6 @@ test('InnovationSandboxTgw', () => {
   new invsbxtgw.InnovationSandboxTransitGatewaySetup(app, 'InnovationSandboxTgwTestStack'
   );
   // THEN
-  expect(SynthUtils.toCloudFormation(stack)).toMatchSnapshot();
+  const template = Template.fromStack(stack);
+  expect(template.toJSON()).toMatchSnapshot();
 });
