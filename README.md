@@ -18,6 +18,7 @@ Building from GitHub source will allow you to modify the solution. The process c
 * a Linux client with the AWS CLI v2 installed and python 3.8+, AWS CDK
 * source code downloaded from GitHub
 * two S3 buckets (minimum): 1 global and 1 for each region where you will deploy
+* The virtualenv tool which can be installed via brew
 
 ### Download from GitHub
 
